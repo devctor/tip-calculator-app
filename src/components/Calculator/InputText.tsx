@@ -14,10 +14,14 @@ const InputContainer = styled.div`
     top: 25%;
     width: 18px;
     height: 18px;
-    /* background: url(${dollarIcon}); */
     background: url(${props => props.icon});
     background-repeat: no-repeat;
     left: 12px;
+  }
+  @media (min-width: 1200px) {
+    &:first-child h3 {
+      margin-block-start: 0;
+    }
   }
 `
 
@@ -29,7 +33,8 @@ const InputField = styled.input.attrs({
   text-align: right;
   padding: .5rem .7rem;
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 700;
+  color: var(--veryDark);
   width: 100%;
 `
 
@@ -47,7 +52,7 @@ const InputText = ({ name, icon, title, handleValue }: TInputText): JSX.Element 
       <h3>{title}</h3>
       <div>
         <span></span>
-        <InputField name={name} onChange={handleValue}/>
+        <InputField name={name} onChange={handleValue} />
       </div>
     </InputContainer>
   )

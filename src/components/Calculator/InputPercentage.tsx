@@ -1,4 +1,3 @@
-
 import styled from 'styled-components/macro'
 
 const InputContainer = styled.div`
@@ -14,6 +13,7 @@ const InputContainer = styled.div`
   label {
     background: var(--veryDark);
     font-size: 24px;
+    font-weight: 700;
     color: var(--white);
     flex: 1 0 calc(50% - 12px);
     display: flex;
@@ -21,7 +21,7 @@ const InputContainer = styled.div`
     justify-content: center;
     position: relative;
     padding: .7rem .7rem;
-    border-radius: .4rem;
+    border-radius: 4px;
     &:nth-last-child(-n+1) {
       padding: 0;
       background: red;
@@ -32,7 +32,7 @@ const InputContainer = styled.div`
         padding: .5rem .7rem;
       }
     }
-  &:focus-within, &:checked+label {
+  &:focus-within {
     background-color: var(--primary);
     color: var(--veryDark);
   }
@@ -42,12 +42,25 @@ const InputContainer = styled.div`
     background: #f3f8fb;
     &::placeholder {
       color: var(--lightGrayish);
+      font-weight: 700;
     }
   }
 
    @media (min-width: 1200px)  {
     label {
+      padding: .5rem .5rem;
+      max-height: 42px;
       flex: 1 0 calc(33.333% - 12px);
+    }
+    input[type="text"] {
+      font-weight: 700;
+      color: var(--veryDark);
+      &::placeholder {
+        font-size: 1.2rem;
+      }
+    }
+    input[type="radio"] {
+      color: red;
     }
   }
 `
@@ -56,44 +69,57 @@ const InputField = styled.input.attrs({
   type: 'radio'
 })`
   position: absolute;
-  appearance: none;
   background: #f3f8fb;
-  text-align: right;
+  appearance: none;
   padding: .5rem .7rem;
   font-size: 24px;
   font-weight: 700;
-  width: 100%;
+  /* width: 100%; */
+  z-index: 2;
+  &:checked + p{
+    position:absolute;
+    background-color: var(--primary);
+    color: var(--veryDark);
+    width:100%;
+    height:100%;
+    z-index: 1;
+    display: grid;
+    place-items:center;
+    border-radius: 4px;
+  }
 `
 
+const handlerLabel = () => {
+  console.log('label')
+}
 type TPercentage = {
   name: string
-  handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 const InputPercentage = ({ name, handleValue }: TPercentage): JSX.Element => {
+  const percentage = () => {
+    const percentage = [5, 10, 15, 25, 50]
+    return (
+      percentage.map(p => {
+        return (
+          <label key={p}>
+            <InputField name={name} value={p} onChange={e => { handleValue(e); handlerLabel() }} />
+            <p>{p}%</p>
+          </label>
+        )
+      })
+    )
+  }
   return (
     <InputContainer>
       <h3>Select tip %</h3>
       <div>
-        <label> 5%</label>
-        <InputField name={name} value={5} onChange={handleValue} />
-
-        <label> 10%
-          <InputField name={name} value={10} onChange={handleValue} />
-        </label>
-        <label> 15%
-          <InputField name={name} value={15} onChange={handleValue} />
-        </label>
-        <label> 25%
-          <InputField name={name} value={25} onChange={handleValue} />
-        </label>
-        <label> 50%
-          <InputField name={name} value={50} onChange={handleValue} />
-        </label>
+        {percentage()}
         <label>
           <input type="text" placeholder='Custom' name={name} onChange={handleValue} />
         </label>
       </div>
-    </InputContainer>
+    </InputContainer >
   )
 }
 

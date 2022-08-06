@@ -81,7 +81,7 @@ const Calculator = (): JSX.Element => {
     <CalcContainer>
       <div className='inputs'>
         <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} />
-        <InputPercentage name='percentage' handleValue={handleInputText} />
+        <InputPercentage name='percentage' handleValue={handleInputText} active={calc.percentage} />
         <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} />
       </div>
       <Result tip={tipPerPerson!.toFixed(2)} total={totalSplit!.toFixed(2)} />

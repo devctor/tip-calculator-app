@@ -30,6 +30,10 @@ describe('<Calculator />', async () => {
     expect(screen.getByText(/tip amount/i)).toBeTruthy()
     expect(screen.getByText(/total/i)).toBeTruthy()
     expect(screen.getAllByText(/\/ person/i)).toBeTruthy()
-    expect(screen.getByText(/\reset/i)).toBeTruthy()
+    expect(screen.getByText(/reset/i)).toBeTruthy()
   })
+  test('cakculations', () => {
+    expect(false).toBeFalsy()
+  })
+
 })

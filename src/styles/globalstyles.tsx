@@ -26,7 +26,7 @@ const GlobalStyle = createGlobalStyle`
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
-  color: var(--veryDark);
+  color: var(--darkGrayish);
   }
 
   h3 {

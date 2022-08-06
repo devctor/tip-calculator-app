@@ -43,12 +43,30 @@ const ResultContainer = styled.div`
     color: var(--veryDark);
     margin-inline: 1rem;
     margin-block-end: 1rem;
-    padding: 0.7rem 0.7rem;
+    padding: 0.5rem 0.5rem;
     font-size: 24px;
     text-transform: uppercase;
     font-weight: 700;
     border: none;
-    border-radius: .4rem;
+    border-radius: 4px;
+  }
+  @media (min-width: 1200px) {
+    padding-block: 1.5rem;
+    gap: 2rem;
+    .resultRow {
+      &:nth-child(1) {
+        margin-block-start: .5rem;
+      }
+      &:nth-child(2) {
+        margin-block-end: .5rem;
+      }
+      .total {
+      font-size: 2rem;
+    }
+    }
+    button {
+      margin-block-end: 0;
+    }
   }
 `
 
