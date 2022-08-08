@@ -20,11 +20,11 @@ const InputContainer = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: .7rem .7rem;
+    max-height: 50px;
+    /* padding: .7rem .7rem; */
     border-radius: 4px;
     &:nth-last-child(-n+1) {
       padding: 0;
-      background: red;
       input {
         height: 100%;
         border: none;
@@ -32,10 +32,10 @@ const InputContainer = styled.div`
         padding: .5rem .7rem;
       }
     }
-  &:focus-within {
-    background-color: var(--primary);
-    color: var(--veryDark);
-  }
+  /* &:focus-within { */
+  /*   background-color: var(--primary); */
+  /*   color: var(--veryDark); */
+  /* } */
   }
   input[type="text"] {
     width: 100%;
@@ -86,6 +86,9 @@ const InputField = styled.input.attrs({
     display: grid;
     place-items:center;
     border-radius: 4px;
+  }
+  &:focus {
+    appearance: none;
   }
 `
 

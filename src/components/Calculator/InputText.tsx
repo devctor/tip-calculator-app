@@ -26,10 +26,12 @@ const InputContainer = styled.div`
 `
 
 const InputField = styled.input.attrs({
-  type: 'text'
+  type: 'text',
 })`
   border: none;
   background: #f3f8fb;
+  appearance: none;
+  -moz-appearance: textfield;
   text-align: right;
   padding: .5rem .7rem;
   font-size: 24px;

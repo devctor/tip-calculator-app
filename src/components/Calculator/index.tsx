@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import InputPercentage from './InputPercentage'
 import InputText from './InputText'
@@ -57,34 +57,73 @@ const Calculator = (): JSX.Element => {
 
   const [tipPerPerson, setTipPerPerson] = useState<number>(0)
   const [totalSplit, setTotalSplit] = useState<number>(0)
+  const [reset, setReset] = useState<boolean>(false)
+
+  const formRef = useRef(null)
 
   const handleInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // if (e.target.name === 'numberPeople') {
+    //   console.log(e.target.value)
+    //   if (e.target.value.length === 0) {
+    //     console.log('empty')
+    //     setCalc({
+    //       ...calc,
+    //       ['numberPeople']: 1
+    //     })
+    //   }
+    // }
     setCalc({
       ...calc,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     })
   }
-  // const totalTip = (total: number, percentage: number, numberPeople: number) => {
-  //   const tip = total * (percentage / 100) / numberPeople
-  //   console.log('totalTip', total, percentage, numberPeople, tip)
-  //   return tip
-  // }
+
+  const handleReset = () => {
+    console.log('button')
+    setReset(!reset)
+  }
+
   useEffect(() => {
     console.log('useEffect', calc)
+
+    // if (calc.numberPeople === 0) {
+    //   console.log('empty effect')
+    // }
     if (calc.numberPeople >= 1) {
       setTipPerPerson(calc.totalBill * (calc.percentage / 100) / calc.numberPeople)
       setTotalSplit((calc.totalBill / calc.numberPeople) + tipPerPerson!)
     }
-  }, [calc, tipPerPerson, totalSplit])
+    if (calc.numberPeople === '') {
+      console.log('empty')
+      setCalc({
+        ...calc,
+        numberPeople: 1
+      })
+    }
+
+    if (reset) {
+      formRef.current.reset()
+      setCalc({
+        totalBill: 0,
+        percentage: 0,
+        numberPeople: 1
+      })
+      setReset(false)
+    }
+  }, [calc, tipPerPerson, totalSplit, reset])
 
   return (
     <CalcContainer>
       <div className='inputs'>
-        <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} />
-        <InputPercentage name='percentage' handleValue={handleInputText} active={calc.percentage} />
-        <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} />
+        <form ref={formRef}>
+          <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} />
+          <InputPercentage name='percentage' handleValue={handleInputText} />
+          <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} />
+        </form>
       </div>
-      <Result tip={tipPerPerson!.toFixed(2)} total={totalSplit!.toFixed(2)} />
+      <Result tip={tipPerPerson!.toFixed(2)} total={totalSplit!.toFixed(2)}>
+        <button onClick={handleReset}>Reset</button>
+      </Result>
     </CalcContainer>
   )
 }

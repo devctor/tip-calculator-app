@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 const ResultContainer = styled.div`
@@ -71,10 +72,12 @@ const ResultContainer = styled.div`
 `
 
 type TResult = {
-  tip: number
-  total: number
+  tip: string
+  total: string,
+  children: ReactNode
 }
-const Result = ({ tip, total }: TResult): JSX.Element => {
+
+const Result = ({ tip, total, children }: TResult): JSX.Element => {
   return (
     <ResultContainer>
       <div className='resultRow'>
@@ -85,7 +88,7 @@ const Result = ({ tip, total }: TResult): JSX.Element => {
         <p>Total <span>/ person</span></p>
         <p className='total'>${total}</p>
       </div>
-      <button>Reset</button>
+      {children}
     </ResultContainer>
   )
 }
