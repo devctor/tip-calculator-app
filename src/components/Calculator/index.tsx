@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import InputPercentage from './InputPercentage'
 import InputText from './InputText'
@@ -52,74 +52,100 @@ const Calculator = (): JSX.Element => {
   const [calc, setCalc] = useState<TCalculatorData>({
     totalBill: 0,
     percentage: 0,
-    numberPeople: 1
+    numberPeople: 0
   })
 
+  const custom = document.getElementById('custom')
+  // Maybe use a state to mange focus on custom text input for percentages
   const [tipPerPerson, setTipPerPerson] = useState<number>(0)
   const [totalSplit, setTotalSplit] = useState<number>(0)
   const [reset, setReset] = useState<boolean>(false)
+  const [focus, setfocus] = useState(false)
+  const [warnNumPeople, setWarnNumPeople] = useState(false)
 
-  const formRef = useRef(null)
+  const formRef = useRef<React.MutableRefObject<boolean | null>>(null)
 
   const handleInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (e.target.name === 'numberPeople') {
-    //   console.log(e.target.value)
-    //   if (e.target.value.length === 0) {
-    //     console.log('empty')
-    //     setCalc({
-    //       ...calc,
-    //       ['numberPeople']: 1
-    //     })
-    //   }
-    // }
+    const re = /^[0-9\b]+$/
+
+    // if value is not blank, then test the regex
+
+    // if (re.test(e.target.value)) {
     setCalc({
       ...calc,
       [e.target.name]: e.target.value
     })
+    // }
   }
 
   const handleReset = () => {
-    console.log('button')
     setReset(!reset)
   }
 
   useEffect(() => {
-    console.log('useEffect', calc)
-
-    // if (calc.numberPeople === 0) {
-    //   console.log('empty effect')
-    // }
+    console.log('calc', calc)
     if (calc.numberPeople >= 1) {
+      setWarnNumPeople(false)
       setTipPerPerson(calc.totalBill * (calc.percentage / 100) / calc.numberPeople)
       setTotalSplit((calc.totalBill / calc.numberPeople) + tipPerPerson!)
     }
-    if (calc.numberPeople === '') {
-      console.log('empty')
-      setCalc({
-        ...calc,
-        numberPeople: 1
-      })
-    }
 
+    if (calc.numberPeople === '') {
+      console.log('numberPeople empty:')
+      setTipPerPerson(0)
+      setTotalSplit(0)
+      setWarnNumPeople(true)
+    }
+    // if (calc.numberPeople.length === 0 || calc.numberPeople === 0) {
+    //   console.log('empty or 0 input')
+    //   setCalc({
+    //     ...calc,
+    //     numberPeople: 1
+    //   })
+    // }
+
+    console.log(reset, 'reset')
     if (reset) {
       formRef.current.reset()
       setCalc({
         totalBill: 0,
         percentage: 0,
-        numberPeople: 1
+        numberPeople: 0
       })
       setReset(false)
+      setWarnNumPeople(false)
+      setTipPerPerson(0)
+      setTotalSplit(0)
     }
-  }, [calc, tipPerPerson, totalSplit, reset])
+    setWarnNumPeople(false)
+
+    if (calc.totalBill > 0 && calc.percentage > 0) {
+      setWarnNumPeople(true)
+      console.log('show warn in num of people ', warnNumPeople)
+    }
+  }, [calc, tipPerPerson, totalSplit, reset, warnNumPeople])
+
+  useEffect(() => {
+    custom?.addEventListener('focus', () => {
+      console.log('focust from parent')
+      setfocus(!focus)
+      setCalc({
+        ...calc,
+        percentage: 0
+      })
+    })
+
+  }, [focus, calc])
 
   return (
     <CalcContainer>
       <div className='inputs'>
         <form ref={formRef}>
-          <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} />
-          <InputPercentage name='percentage' handleValue={handleInputText} />
-          <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} />
+          <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} reset={reset} />
+          <InputPercentage reset={reset} name='percentage' handleValue={handleInputText} />
+          <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} warn={warnNumPeople} />
         </form>
+        {warnNumPeople ? 'true' : 'false'}
       </div>
       <Result tip={tipPerPerson!.toFixed(2)} total={totalSplit!.toFixed(2)}>
         <button onClick={handleReset}>Reset</button>

@@ -50,6 +50,10 @@ const ResultContainer = styled.div`
     font-weight: 700;
     border: none;
     border-radius: 4px;
+    transition: background-color 90ms ease-out;
+    &:hover {
+      background-color: var(--veryLight);
+    }
   }
   @media (min-width: 1200px) {
     padding-block: 1.5rem;

@@ -21,6 +21,10 @@ const GlobalStyle = createGlobalStyle`
     --font-body: "Space Mono";
 
   }
+  ::selection {
+    background: var(--darkGrayish);
+    color: var(--white);
+  }
   body {
   background: var(--veryLight);
   font-family: var(--font-body);

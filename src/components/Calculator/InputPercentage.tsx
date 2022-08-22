@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components/macro'
 
 const InputContainer = styled.div`
@@ -40,9 +41,13 @@ const InputContainer = styled.div`
   input[type="text"] {
     width: 100%;
     background: #f3f8fb;
+    border-radius: 4px;
     &::placeholder {
       color: var(--lightGrayish);
       font-weight: 700;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--primary);
     }
   }
 
@@ -51,6 +56,11 @@ const InputContainer = styled.div`
       padding: .5rem .5rem;
       max-height: 42px;
       flex: 1 0 calc(33.333% - 12px);
+      transition: background-color 90ms ease-out;
+      &:hover {
+        background-color: var(--veryLight);
+        color: var(--veryDark);
+      }
     }
     input[type="text"] {
       font-weight: 700;
@@ -92,34 +102,66 @@ const InputField = styled.input.attrs({
   }
 `
 
-const handlerLabel = () => {
-  console.log('label')
-}
 type TPercentage = {
   name: string
   handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  reset: boolean
 }
-const InputPercentage = ({ name, handleValue }: TPercentage): JSX.Element => {
+const InputPercentage = ({ name, handleValue, reset }: TPercentage): JSX.Element => {
+  const inputPercentageRef = useRef([])
+  const [selected, setSelected] = useState()
+  const percentageArr = [5, 10, 15, 25, 50]
+
+  const handlerLabel = (e) => {
+    console.log('label', e.target.value)
+    const indexSelected = percentageArr.indexOf(parseInt(e.target.value))
+    const customElement = document.getElementById('custom')
+    console.log('custom element', customElement)
+    console.log(indexSelected, 'is')
+    customElement.value = ''
+    setSelected(indexSelected)
+    handleValue(e)
+  }
+
+  const handleCustom = () => {
+    if(selected) {
+      inputPercentageRef.current[selected].checked = false
+    }
+    // console.log(selected, 'handleCustom')
+  }
+
+  const handleClick = (e) => {
+    handleValue(e)
+    console.log('clicked onclick')
+  }
+
+  useEffect(() => {
+    console.log('inpercentage')
+    inputPercentageRef.current = inputPercentageRef.current.slice(0, percentageArr.length)
+    // console.log(inputPercentageRef.current[0].value, 'icu')
+    console.log(reset, ' reset percentage input', inputPercentageRef.current)
+  }, [])
+
   const percentage = () => {
-    const percentage = [5, 10, 15, 25, 50]
     return (
-      percentage.map(p => {
+      percentageArr.map((p, i) => {
         return (
           <label key={p}>
-            <InputField name={name} value={p} onChange={e => { handleValue(e); handlerLabel() }} />
+            <InputField ref={el => inputPercentageRef.current[i] = el} name={name} value={p} onChange={e => { handlerLabel(e) }} onClick={handleClick} />
             <p>{p}%</p>
           </label>
         )
       })
     )
   }
+
   return (
     <InputContainer>
       <h3>Select tip %</h3>
       <div>
         {percentage()}
         <label>
-          <input type="text" placeholder='Custom' name={name} onChange={handleValue} />
+          <input type="text" id="custom" placeholder='Custom' name={name} onFocus={handleCustom} onChange={handleValue} />
         </label>
       </div>
     </InputContainer >
