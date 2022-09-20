@@ -3,7 +3,6 @@ import Presentation from './components/Presentation'
 import GlobalStyle from './styles/globalstyles'
 
 function App() {
-
   return (
     <>
       <GlobalStyle />

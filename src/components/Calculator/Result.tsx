@@ -24,6 +24,7 @@ const ResultContainer = styled.div`
       flex: 0 0 50%;
       display: flex;
       flex-direction: column;
+      font-weight: 600;
       gap: .5rem;
       margin: 0;
       span {
@@ -56,7 +57,8 @@ const ResultContainer = styled.div`
     }
   }
   @media (min-width: 1200px) {
-    padding-block: 1.5rem;
+    padding-block-end: 1.5rem;
+    padding-block-start: 2rem;
     gap: 2rem;
     .resultRow {
       &:nth-child(1) {
@@ -66,7 +68,7 @@ const ResultContainer = styled.div`
         margin-block-end: .5rem;
       }
       .total {
-      font-size: 2rem;
+      font-size: 2.2rem;
     }
     }
     button {
@@ -85,7 +87,7 @@ const Result = ({ tip, total, children }: TResult): JSX.Element => {
   return (
     <ResultContainer>
       <div className='resultRow'>
-        <p>Tip amount <span>/ person</span></p>
+        <p>Tip Amount <span>/ person</span></p>
         <p className='total'>${tip}</p>
       </div>
       <div className='resultRow'>

@@ -1,18 +1,12 @@
-import { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
-import dollarIcon from '../../assets/icon-dollar.svg'
-// import { useState } from 'react'
 
-const InputContainer = styled.div`
+type TContainer = {
+  displayWarn?: boolean
+}
+const InputContainer = styled.div<TContainer>`
   display:flex;
   flex-direction: column;
   margin-inline: 2rem;
-    &.not-valid h3 p {
-      display: block;
-    }
-    &.not-valid input {
-      outline: 2px solid red;
-    }
   div {
     position: relative;
     display: flex;
@@ -24,11 +18,13 @@ const InputContainer = styled.div`
     p {
       margin: 0;
       margin-inline-start: auto;
-      color: red;
-      display: none;
+      color: tomato;
+      /* display: none; */
+    display: ${p => p.displayWarn ? 'block' : 'none'};
     }
   }
   @media (min-width: 1200px) {
+    margin-inline: 1rem;
     &:first-child h3 {
       margin-block-start: 0;
     }
@@ -37,10 +33,11 @@ const InputContainer = styled.div`
 
 type TInputField = {
   icon: string
+  displayWarn?: boolean
 }
 const InputField = styled.input.attrs({
   type: 'text',
-  pattern: '[1-9][0-9]*$',
+  pattern: '[1-9][0-9.]*$',
   required: true
 }) <TInputField>`
   border: none;
@@ -59,13 +56,16 @@ const InputField = styled.input.attrs({
   caret-color: var(--primary);
   position: relative;
   border-radius: 4px;
+  outline: ${p => p.displayWarn ? '2px solid tomato' : '2px solid transparent'};
+
   &:focus-visible {
     transition: outline 70ms ease-in;
     outline: 2px solid var(--primary);
+
   }
   &:invalid {
   &:focus-visible {
-    outline: 2px solid red;
+    outline: 2px solid tomato;
   }
   }
 `
@@ -79,35 +79,18 @@ type TInputText = {
 }
 
 const InputText = ({ name, icon, title, handleValue, warn }: TInputText): JSX.Element => {
-  // const [bill, setBill] = useState()
-  const [value, setValue] = useState<number>()
-  useEffect(() => {
-    console.log('warninf from input', warn)
-  }, [warn])
-
-  const changeValue = (e) => {
-
-    const re = /^[0-9\b]+$/;
-
-    // if value is not blank, then test the regex
-    console.log(e.currentTarget.validity.valid, 'eee', e.target.value.length)
-    if (e.target.value === '0' || e.target.value.length === 0) {
-      e.currentTarget.parentElement?.parentElement.classList.add('not-valid')
-      console.log('0000j jw')
-    } else {
-      e.currentTarget.parentElement?.parentElement.classList.remove('not-valid')
+  const focusInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // handleValue(e)
+    if (e.target.value === '') {
+      e.target.value = ''
+      console.log(e.target.value, 'imput text')
     }
-
-    // if (re.test(e.target.value)) {
-    //   setValue(e.target.value)
-    // }
   }
   return (
-    <InputContainer className={warn ? 'not-valid' : null}>
+    <InputContainer displayWarn={warn}>
       <h3>{title} <p>Can´t be zero</p></h3>
-
       <div>
-        <InputField icon={icon} name={name} onChange={(e) => { handleValue(e), changeValue(e) }} />
+        <InputField icon={icon} name={name} onFocus={focusInputHandler} onChange={handleValue} displayWarn={warn} />
       </div>
     </InputContainer>
   )

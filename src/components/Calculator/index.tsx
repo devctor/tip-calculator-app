@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import InputPercentage from './InputPercentage'
 import InputText from './InputText'
 import dollarIcon from '../../assets/icon-dollar.svg'
@@ -20,11 +20,16 @@ const CalcContainer = styled.div`
    @media (min-width: 1200px)  {
     flex-direction:row;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 8rem auto;
     border-radius: 1rem;
     padding: 2rem;
     .inputs {
       flex: 0 0 50%;
+      form {
+      display: flex;
+    flex-direction:column;
+      gap: 1rem;
+    }
     }
     & > div:nth-child(2) {
       flex: 0 1 50%;
@@ -56,101 +61,82 @@ const Calculator = (): JSX.Element => {
   })
 
   const custom = document.getElementById('custom')
-  // Maybe use a state to mange focus on custom text input for percentages
+
   const [tipPerPerson, setTipPerPerson] = useState<number>(0)
   const [totalSplit, setTotalSplit] = useState<number>(0)
   const [reset, setReset] = useState<boolean>(false)
   const [focus, setfocus] = useState(false)
   const [warnNumPeople, setWarnNumPeople] = useState(false)
+  const [warnTotalBill, setWarnTotalBill] = useState(false)
 
-  const formRef = useRef<React.MutableRefObject<boolean | null>>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const re = /^[0-9\b]+$/
-
-    // if value is not blank, then test the regex
-
-    // if (re.test(e.target.value)) {
+    const { name, value } = e.target
     setCalc({
       ...calc,
-      [e.target.name]: e.target.value
+      [name]: value
     })
-    // }
+    if (name === 'totalBill') {
+      setWarnTotalBill(!e.target.checkValidity())
+    }
+    if (name === 'numberPeople') {
+      setWarnNumPeople(!e.target.checkValidity())
+    }
   }
 
   const handleReset = () => {
+    formRef.current?.reset()
+    setCalc({
+      totalBill: 0,
+      percentage: 0,
+      numberPeople: 0
+    })
     setReset(!reset)
+    // setReset(false)
+    setTipPerPerson(0)
+    setTotalSplit(0)
+    setWarnNumPeople(false)
+    setWarnTotalBill(false)
   }
 
   useEffect(() => {
-    console.log('calc', calc)
     if (calc.numberPeople >= 1) {
-      setWarnNumPeople(false)
       setTipPerPerson(calc.totalBill * (calc.percentage / 100) / calc.numberPeople)
       setTotalSplit((calc.totalBill / calc.numberPeople) + tipPerPerson!)
     }
 
-    if (calc.numberPeople === '') {
-      console.log('numberPeople empty:')
-      setTipPerPerson(0)
-      setTotalSplit(0)
+    if (calc.totalBill > 0 && calc.percentage > 0 && calc.numberPeople === 0) {
       setWarnNumPeople(true)
     }
-    // if (calc.numberPeople.length === 0 || calc.numberPeople === 0) {
-    //   console.log('empty or 0 input')
-    //   setCalc({
-    //     ...calc,
-    //     numberPeople: 1
-    //   })
-    // }
-
-    console.log(reset, 'reset')
-    if (reset) {
-      formRef.current.reset()
-      setCalc({
-        totalBill: 0,
-        percentage: 0,
-        numberPeople: 0
-      })
-      setReset(false)
-      setWarnNumPeople(false)
-      setTipPerPerson(0)
-      setTotalSplit(0)
+    if (calc.totalBill === 0 && calc.percentage > 0 && calc.numberPeople > 0) {
+      setWarnTotalBill(true)
     }
-    setWarnNumPeople(false)
-
-    if (calc.totalBill > 0 && calc.percentage > 0) {
-      setWarnNumPeople(true)
-      console.log('show warn in num of people ', warnNumPeople)
-    }
-  }, [calc, tipPerPerson, totalSplit, reset, warnNumPeople])
+  }, [calc, tipPerPerson, totalSplit, reset])
 
   useEffect(() => {
     custom?.addEventListener('focus', () => {
-      console.log('focust from parent')
       setfocus(!focus)
       setCalc({
         ...calc,
         percentage: 0
       })
     })
-
-  }, [focus, calc])
+  }, [focus])
 
   return (
     <CalcContainer>
       <div className='inputs'>
         <form ref={formRef}>
-          <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} reset={reset} />
-          <InputPercentage reset={reset} name='percentage' handleValue={handleInputText} />
+          <InputText name='totalBill' icon={dollarIcon} title='Bill' handleValue={handleInputText} warn={warnTotalBill} />
+          <InputPercentage name='percentage' handleValue={handleInputText} />
           <InputText name='numberPeople' icon={personIcon} title='Number of people' handleValue={handleInputText} warn={warnNumPeople} />
         </form>
-        {warnNumPeople ? 'true' : 'false'}
       </div>
-      <Result tip={tipPerPerson!.toFixed(2)} total={totalSplit!.toFixed(2)}>
+      <Result tip={tipPerPerson.toFixed(2)} total={totalSplit!.toFixed(2)}>
         <button onClick={handleReset}>Reset</button>
       </Result>
-    </CalcContainer>
+    </CalcContainer >
   )
 }
 
