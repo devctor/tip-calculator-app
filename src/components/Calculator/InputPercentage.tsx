@@ -42,6 +42,7 @@ const InputContainer = styled.div`
     border-radius: 4px;
     font-size: 24px;
     font-weight: 700;
+    color: var(--veryDark);
     &::placeholder {
       color: var(--lightGrayish);
       font-weight: 700;

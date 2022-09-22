@@ -13,19 +13,24 @@ const InputContainer = styled.div<TContainer>`
     align-items: center;
     background: #f3f8fb;
   }
-  h3 {
+  label {
     display: flex;
-    p {
+    flex-direction: column;
+    .label-title {
+      display: flex;
+      font-weight: 700;
+      margin-block: 1rem;
+    }
+    .label-validate {
       margin: 0;
       margin-inline-start: auto;
       color: tomato;
-      /* display: none; */
-    display: ${p => p.displayWarn ? 'block' : 'none'};
+      display: ${p => p.displayWarn ? 'block' : 'none'};
     }
   }
   @media (min-width: 1200px) {
     margin-inline: 1rem;
-    &:first-child h3 {
+    &:first-child label {
       margin-block-start: 0;
     }
   }
@@ -87,10 +92,9 @@ const InputText = ({ name, icon, title, handleValue, warn }: TInputText): JSX.El
   }
   return (
     <InputContainer displayWarn={warn}>
-      <h3>{title} <p>Can´t be zero</p></h3>
-      <div>
+      <label><span className="label-title">{title} <span className="label-validate">Can´t be zero</span></span>
         <InputField icon={icon} name={name} onFocus={focusInputHandler} onChange={handleValue} displayWarn={warn} />
-      </div>
+      </label>
     </InputContainer>
   )
 }
