@@ -11,6 +11,9 @@ const InputContainer = styled.div`
     flex-wrap: wrap;
     gap: 12px;
   }
+  p {
+      font-weight: 700;
+  }
   label {
     background: var(--veryDark);
     font-size: 24px;
@@ -23,6 +26,13 @@ const InputContainer = styled.div`
     position: relative;
     max-height: 50px;
     border-radius: 4px;
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      max-height: 50px;
+    }
     &:nth-last-child(-n+1) {
       padding: 0;
       input {
@@ -92,12 +102,12 @@ const InputField = styled.input.attrs({
   font-size: 24px;
   font-weight: 700;
   z-index: 2;
-  &:checked + p{
+  &:checked + span{
     position:absolute;
     background-color: var(--primary);
     color: var(--veryDark);
     width:100%;
-    height:100%;
+    height:50px;
     z-index: 1;
     display: grid;
     place-items:center;
@@ -137,7 +147,7 @@ const InputPercentage = ({ name, handleValue }: TPercentage): JSX.Element => {
         return (
           <label key={p}>
             <InputField ref={el => (inputPercentageRef.current[i] = el)} name={name} value={p} onClick={handlerLabel} />
-            <p>{p}%</p>
+            <span>{p}%</span>
           </label>
         )
       })
@@ -146,7 +156,7 @@ const InputPercentage = ({ name, handleValue }: TPercentage): JSX.Element => {
 
   return (
     <InputContainer>
-      <h3>Select tip %</h3>
+      <p>Select tip %</p>
       <div>
         {percentage()}
         <label className="customInput">
