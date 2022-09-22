@@ -83,7 +83,6 @@ const InputText = ({ name, icon, title, handleValue, warn }: TInputText): JSX.El
     // handleValue(e)
     if (e.target.value === '') {
       e.target.value = ''
-      console.log(e.target.value, 'imput text')
     }
   }
   return (

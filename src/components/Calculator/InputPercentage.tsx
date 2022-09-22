@@ -117,7 +117,6 @@ const InputPercentage = ({ name, handleValue }: TPercentage): JSX.Element => {
   const percentageArr = [5, 10, 15, 25, 50]
 
   const handlerLabel = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-    console.table(e.currentTarget.value)
     const indexSelected = percentageArr.indexOf(parseInt(e.currentTarget.value))
     const customElement = document.getElementById('custom') as HTMLInputElement
     customElement!.value = ''
