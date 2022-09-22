@@ -35,8 +35,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [Solution](https://github.com/devctor/tip-calculator-app-frontendmentor)
+- Live Site URL: [Live site](https://632c64ac2b8a1f2ecfbc4d20--voluble-sfogliatella-d92917.netlify.app/)
 
 ## My process
 
